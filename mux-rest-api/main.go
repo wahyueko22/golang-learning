@@ -10,79 +10,81 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Printer : what is this?
-type Post struct {
-	ID string `json:"id"`
-	Title string `json:"title"`
-	Body string `json:"body"`
+// Printer : comment 
+type Student struct {
+	ID string "json:id"
+	Name string `json:"name"`
+	Address string `json:"address"`
+	Gender string `json:"gender"`
+	Age    int `json:"age"`
   }
 
-var posts []Post
+var arrStudent []Student
 
-func getPosts(w http.ResponseWriter, r *http.Request) {
+func getStudents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(posts)
+	json.NewEncoder(w).Encode(arrStudent)
 }
 
-func createPost(w http.ResponseWriter, r *http.Request) {
+func createStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var post Post
-	_ = json.NewDecoder(r.Body).Decode(&post)
-	post.ID = strconv.Itoa(rand.Intn(1000000))
-	posts = append(posts, post)
-	json.NewEncoder(w).Encode(&post)
+	var student Student
+	_ = json.NewDecoder(r.Body).Decode(&student)
+	student.ID = strconv.Itoa(rand.Intn(1000000))
+	arrStudent = append(arrStudent, student)
+	json.NewEncoder(w).Encode(&student)
 }
 
-func getPost(w http.ResponseWriter, r *http.Request) {
+func getStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	for _, item := range posts {
+	for _, item := range arrStudent {
 	  if item.ID == params["id"] {
 		json.NewEncoder(w).Encode(item)
 		return
 	  }
 	}
-	json.NewEncoder(w).Encode(&Post{})
+	json.NewEncoder(w).Encode(&Student{})
 }
 
-func updatePost(w http.ResponseWriter, r *http.Request) {
+func updateStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	for index, item := range posts {
+	for index, item := range arrStudent {
 	  if item.ID == params["id"] {
-		posts = append(posts[:index], posts[index+1:]...)
-		var post Post
-		_ = json.NewDecoder(r.Body).Decode(&post)
-		post.ID = params["id"]
-		posts = append(posts, post)
-		json.NewEncoder(w).Encode(&post)
+		arrStudent = append(arrStudent[:index], arrStudent[index+1:]...)
+		var student Student
+		_ = json.NewDecoder(r.Body).Decode(&student)
+		student.ID = params["id"]
+		arrStudent = append(arrStudent, student)
+		json.NewEncoder(w).Encode(&student)
 		return
 	  }
 	}
-	json.NewEncoder(w).Encode(posts)
+	json.NewEncoder(w).Encode(arrStudent)
 }
 
-func deletePost(w http.ResponseWriter, r *http.Request) {
+func deleteStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	for index, item := range posts {
+	for index, item := range arrStudent {
 	  if item.ID == params["id"] {
-		posts = append(posts[:index], posts[index+1:]...)
+		arrStudent = append(arrStudent[:index], arrStudent[index+1:]...)
 		break
 	  }
 	}
-	json.NewEncoder(w).Encode(posts)
+	json.NewEncoder(w).Encode(arrStudent)
 }
 
 func main()  {
 	fmt.Println("it work")
 	router := mux.NewRouter()
 
-	router.HandleFunc("/posts", getPosts).Methods("GET")
-	router.HandleFunc("/posts", createPost).Methods("POST")
-	router.HandleFunc("/posts/{id}", getPost).Methods("GET")
-	router.HandleFunc("/posts/{id}", updatePost).Methods("PUT")
-	router.HandleFunc("/posts/{id}", deletePost).Methods("DELETE")
+	router.HandleFunc("/posts", getStudents).Methods("GET")
+	router.HandleFunc("/posts", createStudent).Methods("POST")
+	router.HandleFunc("/posts/{id}", getStudent).Methods("GET")
+	router.HandleFunc("/posts/{id}", updateStudent).Methods("PUT")
+	router.HandleFunc("/posts/{id}", deleteStudent).Methods("DELETE")
 
 	http.ListenAndServe(":8000", router)
 }
