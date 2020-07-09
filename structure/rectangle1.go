@@ -6,38 +6,66 @@ import (
 	"github.com/wahyueko22/golang-learning/structure/entity"
 )
 
-type rectangle struct{
+type rectangle struct {
 	length int
-	widht int
-	color string
+	widht  int
+	color  string
 }
 
-func main(){
+type student struct {
+	name  string
+	grade int
+}
+
+func (s student) changeName1(name string) {
+	fmt.Println("---> on changeName1, name changed to", name)
+	s.name = name
+}
+
+func (s *student) changeName2(name string) {
+	fmt.Println("---> on changeName2, name changed to", name)
+	s.name = name
+}
+
+func main() {
+
+	var s1 = student{"john wick", 21}
+	fmt.Println("s1 before", s1.name)
+	// john wick
+
+	s1.changeName1("jason bourne")
+	fmt.Println("s1 after changeName1", s1.name)
+	// john wick
+
+	s1.changeName2("ethan hunt")
+	fmt.Println("s1 after changeName2", s1.name)
+	// ethan hun
+
 	//instanciate directly
-	var rect1 = rectangle{10,20,"red"}
+	var rect1 = rectangle{10, 20, "red"}
 	fmt.Println(rect1)
 
 	var rect2 rectangle
-	rect2.length=10;
-	rect2.color ="blue"
+	rect2.length = 10
+	rect2.color = "blue"
 	fmt.Println(rect2)
 
 	rect3 := new(rectangle)
-	rect3.length=10
-	rect3.color="new blue"
+	rect3.length = 10
+	rect3.color = "new blue"
 	fmt.Println(rect3)
 
 	rect4 := &rectangle{}
-	rect4.widht=5
-	rect4.color="yellow pointer"
+	rect4.widht = 5
+	rect4.color = "yellow pointer"
 	fmt.Println(rect4)
 
 	rect5 := &rectangle{}
-	(*rect5).widht=5
-	(*rect5).color="red pointer"
+	(*rect5).widht = 5
+	(*rect5).color = "red pointer"
 	fmt.Println(rect5)
 
-	rect6:=&rect2
+	rect6 := &rect2
 	rect6.color = "color_6"
 	fmt.Println(rect6, rect2)
 
@@ -65,5 +93,5 @@ func main(){
 		},
 	}
 	emp1.EmpInfo()
-	
+
 }
